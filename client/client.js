@@ -22,7 +22,7 @@ function askForOption() {
   console.log('╔══════════════════════════════╗');
   console.log('║ Welcome To Smart Home System ║');
   console.log('╠══════════════════════════════╣');
-  console.log('║ Choose an option:            ║');
+  console.log('║ Please, Choose an option:    ║');
   console.log('╠══════════════════════════════╣');
   console.log('║ 1. Turn on the lights        ║');
   console.log('║ 2. Turn off the lights       ║');
