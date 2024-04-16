@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+service SmartHome {
+    rpc TurnOnLights (Empty) returns (Response) {}
+    rpc TurnOffLights (Empty) returns (Response) {}
+    rpc IncreaseTemperature (Empty) returns (Response) {}
+    rpc DecreaseTemperature (Empty) returns (Response) {}
+    rpc OpenCurtains (Empty) returns (Response) {}
+    rpc CloseCurtains (Empty) returns (Response) {}
+}
+
+message Empty {}
+
+message Response {
+    string message = 1;
+}
