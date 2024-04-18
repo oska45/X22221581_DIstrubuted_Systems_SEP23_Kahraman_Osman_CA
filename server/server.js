@@ -1,3 +1,4 @@
+//imported necessary modules for working with gRPC
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
@@ -12,7 +13,7 @@ let lightsState = false;
 let thermostatTemperature = 18; // Default temperature for thermostat
 let curtainsState = false;
 
-// Define gRPC service functions
+// Defined gRPC service functions
 function turnOnLights(call, callback) {
     lightsState = true;
     callback(null, { message: 'Lights turned on' });
@@ -43,7 +44,7 @@ function closeCurtains(call, callback) {
     callback(null, { message: 'Curtains closed' });
 }
 
-// Create gRPC server
+// Created gRPC server
 const server = new grpc.Server();
 server.addService(smartHomeProto.SmartHome.service, {
     TurnOnLights: turnOnLights,

@@ -1,23 +1,24 @@
+//imported necessary modules for working with gRPC
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const readline = require('readline');
 
-// Load the protobuf definition
+// Loading  the protobuf definition
 const PROTO_PATH = path.join(__dirname, '..', 'proto', 'smart_home.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const smartHomeProto = grpc.loadPackageDefinition(packageDefinition).SmartHome;
 
-// Create gRPC client
+// Created gRPC client
 const client = new smartHomeProto('localhost:50051', grpc.credentials.createInsecure());
 
-// Create readline interface for user input
+// Created readline interface for user input
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-// Function to display menu and prompt user for input
+// These functions to display menu and prompt user for input
 function askForOption() {
   console.log('╔══════════════════════════════╗');
   console.log('║ Welcome To Smart Home System ║');
@@ -33,7 +34,9 @@ function askForOption() {
   console.log('╠══════════════════════════════╣');
   console.log('║ 9. Exit                      ║');
   console.log('╚══════════════════════════════╝');
+  console.log('--------------------------------');
  
+  //Please choose an option to take action
   rl.question('Enter your choice: ', (option) => {
     switch (option) {
       case '1':
