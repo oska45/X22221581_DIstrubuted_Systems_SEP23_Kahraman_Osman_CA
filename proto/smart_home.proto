@@ -1,16 +1,13 @@
 syntax = "proto3";
 
 service SmartHome {
-    rpc TurnOnLights (Empty) returns (Response) {}
-    rpc TurnOffLights (Empty) returns (Response) {}
-    rpc IncreaseTemperature (Empty) returns (Response) {}
-    rpc DecreaseTemperature (Empty) returns (Response) {}
-    rpc OpenCurtains (Empty) returns (Response) {}
-    rpc CloseCurtains (Empty) returns (Response) {}
+  rpc UpdateSmartHomeState (stream UpdateRequest) returns (stream UpdateResponse) {}
 }
 
-message Empty {}
+message UpdateRequest {
+  string message = 1; // Type of action (e.g., turn on lights, increase temperature)
+}
 
-message Response {
-    string message = 1;
+message UpdateResponse {
+  string message = 1; // Response message from the server
 }

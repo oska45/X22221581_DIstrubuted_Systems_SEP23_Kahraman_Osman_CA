@@ -13,54 +13,59 @@ let lightsState = false;
 let thermostatTemperature = 18; // Default temperature for thermostat
 let curtainsState = false;
 
-// Defined gRPC service functions
-function turnOnLights(call, callback) {
-    lightsState = true;
-    callback(null, { message: 'Lights turned on' });
-}
 
-function turnOffLights(call, callback) {
-    lightsState = false;
-    callback(null, { message: 'Lights turned off' });
-}
-
-function increaseTemperature(call, callback) {
-    thermostatTemperature++;
-    callback(null, { message: `Temperature increased to ${thermostatTemperature}` });
-}
-
-function decreaseTemperature(call, callback) {
-    thermostatTemperature--;
-    callback(null, { message: `Temperature decreased to ${thermostatTemperature}` });
-}
-
-function openCurtains(call, callback) {
-    curtainsState = true;
-    callback(null, { message: 'Curtains opened' });
-}
-
-function closeCurtains(call, callback) {
-    curtainsState = false;
-    callback(null, { message: 'Curtains closed' });
-}
-
-// Created gRPC server
-const server = new grpc.Server();
-server.addService(smartHomeProto.SmartHome.service, {
-    TurnOnLights: turnOnLights,
-    TurnOffLights: turnOffLights,
-    IncreaseTemperature: increaseTemperature,
-    DecreaseTemperature: decreaseTemperature,
-    OpenCurtains: openCurtains,
-    CloseCurtains: closeCurtains,
-});
-
-// Bind the server to the specified address and port
-server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), (err, port) => {
+function updateDeviceState(request) {
+    switch (request.message) {
+      case 'TurnOnLights':
+        lightsState = true;
+        return 'Lights turned on';
+      case 'TurnOffLights':
+        lightsState = false;
+        return 'Lights turned off';
+      case 'IncreaseTemperature':
+        thermostatTemperature++;
+        return `Thermostat temperature increased to ${thermostatTemperature}`;
+      case 'DecreaseTemperature':
+        thermostatTemperature--;
+        return `Thermostat temperature decreased to ${thermostatTemperature}`;
+      case 'OpenCurtains':
+        curtainsState = true;
+        return 'Curtains opened';
+      case 'CloseCurtains':
+        curtainsState = false;
+        return 'Curtains closed';
+      default:
+        console.warn('Unexpected request:', request.message);
+        return 'Invalid request';
+    }
+  }
+  
+  function updateSmartHomeState(call) {
+    call.on('data', (request) => {
+      const responseMessage = updateDeviceState(request);
+      console.log('Client message:', request.message); // Log received message
+      call.write({ message: responseMessage });
+    });
+  
+    call.on('end', () => {
+      call.end();
+    });
+  
+    call.on('error', (err) => {
+      console.error('Error:', err);
+    });
+  }
+  
+  const server = new grpc.Server();
+  server.addService(smartHomeProto.SmartHome.service, {
+    UpdateSmartHomeState: updateSmartHomeState,
+  });
+  
+  server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), (err, port) => {
     if (err) {
-        console.error('Error starting server:', err);
-        return;
+      console.error('Error starting server:', err);
+      return;
     }
     server.start();
     console.log(`Server running at http://0.0.0.0:${port}`);
-});
+  });
