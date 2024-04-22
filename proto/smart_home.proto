@@ -1,7 +1,11 @@
+
+//specifies that the protobuf file using syntax version 3
 syntax = "proto3";
 
+
+//gRPC service named SmartHome
 service SmartHome {
-  rpc UpdateSmartHomeState (stream UpdateRequest) returns (stream UpdateResponse) {}
+  rpc UpdateSmartHomeState (stream UpdateRequest) returns (stream UpdateResponse) {}  //method name (input and output)
 }
 
 message UpdateRequest {

@@ -1,3 +1,5 @@
+
+//------------------OKahramanDistrubutedSystems-----------------------------------//
 //imported necessary modules for working with gRPC
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
@@ -8,12 +10,18 @@ const PROTO_PATH = path.join(__dirname, '../proto/smart_home.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const smartHomeProto = grpc.loadPackageDefinition(packageDefinition);
 
+
+//---------------------------------------------------------------------------//
+
 // Simulated device states
 let lightsState = false;
 let thermostatTemperature = 18; // Default temperature for thermostat
 let curtainsState = false;
 
 
+//---------------------------------------------------------------------------//
+
+// Switch statement to update device states based on received requests
 function updateDeviceState(request) {
     switch (request.message) {
       case 'TurnOnLights':
@@ -24,10 +32,10 @@ function updateDeviceState(request) {
         return 'Lights turned off';
       case 'IncreaseTemperature':
         thermostatTemperature++;
-        return `Thermostat temperature increased to ${thermostatTemperature}`;
+        return `Thermostat temperature increased to : ${thermostatTemperature}`;
       case 'DecreaseTemperature':
         thermostatTemperature--;
-        return `Thermostat temperature decreased to ${thermostatTemperature}`;
+        return `Thermostat temperature decreased to : ${thermostatTemperature}`;
       case 'OpenCurtains':
         curtainsState = true;
         return 'Curtains opened';
@@ -40,6 +48,9 @@ function updateDeviceState(request) {
     }
   }
   
+//---------------------------------------------------------------------------//
+
+   // Event handlers for data, end, and error events on the call
   function updateSmartHomeState(call) {
     call.on('data', (request) => {
       const responseMessage = updateDeviceState(request);
@@ -56,11 +67,19 @@ function updateDeviceState(request) {
     });
   }
   
+
+//---------------------------------------------------------------------------//
+
+  //creates a new gRPC server instance and adds the UpdateSmartHomeState method to it.
   const server = new grpc.Server();
   server.addService(smartHomeProto.SmartHome.service, {
     UpdateSmartHomeState: updateSmartHomeState,
   });
   
+
+//---------------------------------------------------------------------------//
+
+  //// Handling binding errors and starting the server
   server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), (err, port) => {
     if (err) {
       console.error('Error starting server:', err);
@@ -69,3 +88,5 @@ function updateDeviceState(request) {
     server.start();
     console.log(`Server running at http://0.0.0.0:${port}`);
   });
+
+  //----------------------------------END-----------------------------------------//
