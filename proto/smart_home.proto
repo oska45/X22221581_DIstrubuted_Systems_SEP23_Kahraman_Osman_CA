@@ -9,7 +9,7 @@ service SmartHome {
 }
 
 message UpdateRequest {
-  string message = 1; // Type of action (e.g., turn on lights, increase temperature)
+  string message = 1; // Type of action (e.g., turn on lights, increase temperaturez)
 }
 
 message UpdateResponse {

@@ -1,12 +1,22 @@
-const path = require('path');
-const grpc = require('@grpc/grpc-js');
-const protoLoader = require('@grpc/proto-loader');
-const readline = require('readline');
+const path = require('path');  //file and directory paths
+const grpc = require('@grpc/grpc-js'); //gRPC library for Node.js
+const protoLoader = require('@grpc/proto-loader');  //helps to load Protocol Buffer (protobuf) definitions
+const readline = require('readline'); //an interface for reading input from a readable stream
 
-// Loading the protobuf definition
+/// Loaded the protobuf definition
 const PROTO_PATH = path.join(__dirname, '..', 'proto', 'smart_home.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
-const smartHomeProto = grpc.loadPackageDefinition(packageDefinition).SmartHome;
+const smartHomeProto = grpc.loadPackageDefinition(packageDefinition).SmartHome; //extracts the SmartHome object from the loaded protobuf
+
+
+/*
+CLIENT
+npm install @grpc/grpc-js
+npm install @grpc/proto-loader
+npm install readline-sync
+*/
+
+//---------------------------------------------------------------------------//
 
 // Created gRPC client
 const client = new smartHomeProto('localhost:50051', grpc.credentials.createInsecure());
@@ -17,6 +27,10 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+
+//---------------------------------------------------------------------------//
+
+//menu of options for controlling a smart home system
 function askForOption() {
   console.log('╔══════════════════════════════╗');
   console.log('║ Welcome To Smart Home System ║');
@@ -35,7 +49,7 @@ function askForOption() {
   console.log('--------------------------------');
 
   rl.question('Enter your choice: ', (option) => {
-    switch (option) {
+    switch (option) {   //switch statement
       case '1':
         sendMessage('TurnOnLights');
         break;

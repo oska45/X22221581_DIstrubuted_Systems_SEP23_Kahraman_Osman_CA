@@ -1,10 +1,13 @@
 
 //------------------OKahramanDistrubutedSystems-----------------------------------//
-//imported necessary modules for working with gRPC
-const path = require('path');
-const grpc = require('@grpc/grpc-js');
-const protoLoader = require('@grpc/proto-loader');
 
+//imported necessary modules for working with gRPC
+const path = require('path');   //file and directory paths
+const grpc = require('@grpc/grpc-js');   //gRPC library for Node.js
+const protoLoader = require('@grpc/proto-loader'); //helps to load Protocol Buffer (protobuf) definitions
+
+
+//// Loaded the protobuf definition
 const PROTO_PATH = path.join(__dirname, '../proto/smart_home.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
